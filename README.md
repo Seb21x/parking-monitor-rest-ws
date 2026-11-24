@@ -1,36 +1,36 @@
 # Parking Monitor System (WebSockets + REST API)
 
-Arquitecturas para Aplicaciones en Red (2026-2027) - Práctica 2
+Network Applications Architecture (2026-2027) - Assignment 2
 
-## Arquitectura del Proyecto
+## System Architecture
 
-El sistema está compuesto por dos aplicaciones Java independientes desplegadas en instancias separadas de Apache Tomcat 10.x:
+The system consists of two independent Java applications deployed on separate Apache Tomcat 10.x instances:
 
-1. **`parking-rest`**: Servicio RESTful (Jersey JAX-RS / Jakarta EE 10)
-   - Catálogo de aparcamientos y disponibilidad en memoria.
-   - Hilo en segundo plano que actualiza la disponibilidad de cada aparcamiento de forma aleatoria ($[-5, +5]$ plazas) cada 5 segundos.
-   - Seguridad mediante credencial preconfigurada en cabecera HTTP (`X-API-Key`).
-   - Despliegue en Tomcat 10 (puerto `8080`).
+1. **`parking-rest`**: RESTful Service (Jersey JAX-RS / Jakarta EE 10)
+   - In-memory parking lot catalog and availability management.
+   - Background thread updating availability randomly ($-5$ to $+5$ spaces) every 5 seconds.
+   - API protection using a preconfigured HTTP header credential (`X-API-Key`).
+   - Deployed on Apache Tomcat 10 (port `8080`).
 
-2. **`parking-ws`**: Aplicación Web basada en WebSockets
-   - Panel de seguimiento de aparcamientos compartido por los usuarios de una misma zona.
-   - Consulta periódica al servicio REST para mantener los datos sincronizados.
-   - Actualización en tiempo real vía canal WebSocket a todos los clientes conectados a una zona.
-   - Despliegue en Tomcat 10 (puerto `8081`).
+2. **`parking-ws`**: WebSockets Web Application
+   - Shared tracking dashboard for users connected to the same zone.
+   - Periodic background polling of the REST service to synchronize catalog and availability.
+   - Real-time updates pushed over WebSockets to all connected clients in the zone.
+   - Deployed on Apache Tomcat 10 (port `8081`).
 
-## Requisitos
+## Requirements
 - Java 21 (JDK)
 - Apache Maven 3.9+
-- 2x Apache Tomcat 10.1.x
+- 2x Apache Tomcat 10.1.x instances
 
-## Compilación
+## Building the Projects
 ```bash
-# Compilar servicio REST
+# Build REST service
 cd parking-rest
 mvn clean package
 
-# Compilar aplicación WebSocket
+# Build WebSocket application
 cd ../parking-ws
 mvn clean package
 ```
-Los ficheros `.war` generados en las carpetas `target/` se despliegan en las carpetas `webapps/` de cada Tomcat correspondiente.
+The generated `.war` files in the `target/` directories can then be deployed to the `webapps/` folder of each respective Tomcat instance.
